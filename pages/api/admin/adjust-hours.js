@@ -1,6 +1,6 @@
 const { requireAuth } = require('../../../lib/session');
 const { isAdmin } = require('../../../lib/driver-mapping');
-const { setAdjustment } = require('../../../lib/adjustments');
+const { isValidUsername, setAdjustment } = require('../../../lib/adjustments');
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
 
   const { username, month, adjustment, reason } = req.body;
 
-  if (!username || !month || adjustment === undefined) {
+  if (!isValidUsername(username) || !month || adjustment === undefined) {
     return res.status(400).json({
       error: 'Missing required fields: username, month, adjustment'
     });
